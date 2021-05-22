@@ -59,23 +59,23 @@ void adc12Cfg(const char * vref, char sampMode, char convTrigger, char adcChanne
 
     if (sampMode)
        	ADC12CTL1  |= ADC12SHP;						// extended mode. SAMPCON follows the trigger signal width // SET ADC12SHT1,0 IN ADC12CTL0
-       	else
+    else
        	ADC12CTL1  &= ~ADC12SHP;					// pulse sampling sampling. SAMPCON will be controlled by ADC12SHT1x, ADC12SHT10x. Bits Not implemented here.
 
-    ADC12CTL0 |= ADC12SHT0_3;                       // 32 ADC12CLK cycles for sampling
+    ADC12CTL0 |= ADC12SHT0_0;                       // 32 ADC12CLK cycles for sampling
 
     ADC12CTL0 |= ADC12ON;         					// ADC12 on
-    ADC12CTL1 |= ADC12CONSEQ_3 | ADC12CSTARTADD_12;   // Repeated Auto-scan, start at BIT1
+    ADC12CTL1 |= ADC12CONSEQ_3;                     // Repeated Auto-scan, start at BIT1
     ADC12CTL2 |= ADC12RES_2;						// 12-Bit Resolution
 
-    ADC12MCTL2 |= ADC12SREF_1;
+    ADC12MCTL1 |= ADC12SREF_1 + ADC12EOS + ADC12INCH_1;
 
-    ADC12IE   |= BIT0;                         		// Enable interrupt
+    ADC12IE   |= BIT0 + BIT1;                  		// Enable interrupt
     ADC12CTL0 |= ADC12ENC;							// Enable Conversion
 
-    P6SEL |= BIT0 + BIT2;
+    P6SEL |= BIT0 + BIT1;
 
-    timerA0Init(1000);
+    timerA0Init(1500);
 }
 
 /************************************************************************************
@@ -96,14 +96,22 @@ void adc12SampSWConv(void){
 
 
 #pragma vector = ADC12_VECTOR
-interrupt void eocADC12ISR(void)	{
-//    switch(__even_in_range(ADC12IV,8)){
-//    case 6:
-        xCode = ADC12MEM0;
-//        break;
-//    case 8:
-        yCode = ADC12MEM2;
-//      break;
-//    default: break;
-//    }
+interrupt void eocADC12ISR(void) {
+
+    if(i>9)
+        i = 0;
+    if(j>9)
+        j = 0;
+
+    switch(__even_in_range(ADC12IV,8)){
+    case 6:
+        xCode[i++] = ADC12MEM0;
+        sampleX = 1;
+        break;
+    case 8:
+        yCode[j++] = ADC12MEM1;
+        sampleY = 1;
+      break;
+    default: break;
+    }
 }

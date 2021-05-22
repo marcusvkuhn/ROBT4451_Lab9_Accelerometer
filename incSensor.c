@@ -10,21 +10,28 @@
  *      Author: Raymond
  */
 
-double singleVoltToDeg(unsigned int Nadc, char axis){
-    double angle, angleDeg, numVal, numVal2;
-
-    numVal = 2*Nadc;
-
-    numVal2 = numVal/4095;
+void singleADCToDeg(unsigned int Nadc, char axis){
+    double angle, numVal;
 
     if (axis == 'x'){
-        angle = asin(numVal2-G);
-        angleDeg = angle*180/PI;
+        numVal = (2*(double)Nadc)/4095;
+
+        ax = numVal - 1;
+        angle = asin(ax);
+        xDeg = angle*180/PI;
     }
     else if (axis == 'y'){
-        angle = acos(numVal2-G);
-        angleDeg = (angle*180/PI) - 90;
-    }
+        numVal = (double)Nadc/4095;
 
-    return angleDeg;
+        ay = numVal;
+        angle = acos(ay);
+        yDeg = (angle*180/PI);
+    }
+}
+
+void combADCToDeg(double vectX, double vectY){
+
+    angleRad = atan2(vectX, vectY);
+    angleDeg = angleRad * 180;
+    angleDeg = (angleDeg/PI);
 }

@@ -8,11 +8,12 @@
 #ifndef INCSENSOR_H_
 #define INCSENSOR_H_
 
-#define G 1
 #define PI 3.14159265359
 
 
-double singleVoltToDeg(unsigned int Nadc, char axis);
+void singleADCToDeg(unsigned int Nadc, char axis);
+void combADCToDeg(double vectX, double vectY);
 
+double angleRad, angleDeg, xDeg, yDeg, ax, ay;
 
 #endif /* INCSENSOR_H_ */

@@ -12,12 +12,10 @@
 int adc12Result[300]; // public global variable declarations
 int i, j;
 
-unsigned int xAxisVoltage[10],
-             yAxisVoltage[10],
-             xCode,
-             yCode;
+unsigned int xCode[10],
+             yCode[10];
 
-int samples;
+int sampleX, sampleY;
 
 #define SAMPLE_ADC 10000   // delay between ADC12SC H-->L
 
